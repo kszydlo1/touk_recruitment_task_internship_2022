@@ -1,16 +1,26 @@
 package com.kszydlo1.ticket_booking_app;
 
-public class Model {
-    private final long id;
-    private final String content;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import java.util.Objects;
 
-    public Model(long id, String content) {
-        this.id = id;
-        this.content = content;
-    }
+@Table(name = "models")
+@Entity
+public class Model {
+    @Id
+    @GeneratedValue
+    private long id;
+
+    private String content;
 
     public long getId() {
         return id;
+    }
+
+    public void setContent(String c){
+        content = c;
     }
 
     public String getContent() {
