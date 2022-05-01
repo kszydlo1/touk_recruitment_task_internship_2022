@@ -1,5 +1,6 @@
 package com.kszydlo1.ticket_booking_app;
 
+import com.kszydlo1.ticket_booking_app.model.Movie;
 import com.kszydlo1.ticket_booking_app.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,7 +17,9 @@ public class View {
     private ModelRepository repository;
 
     @GetMapping("/example_view")
-    public Integer example_view() {
-        return 5;
+    public String example_view() {
+        List <Movie> movies = repository.findAll();
+
+        return movies.get(0).getTitle();
     }
 }

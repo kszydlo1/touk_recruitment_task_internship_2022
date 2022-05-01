@@ -7,7 +7,7 @@ import java.util.List;
 @Entity
 public class ScreeningRoom {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private long id;
 
     @OneToMany (targetEntity = Screening.class)
