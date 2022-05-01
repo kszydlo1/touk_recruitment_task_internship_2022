@@ -3,12 +3,13 @@ package com.kszydlo1.ticket_booking_app.model;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Objects;
 
 @Table(name = "seats")
 @Entity
 public class Seat implements Serializable {
     @Id
-    private int row;
+    private int line;       // 'row' word is reserved in SQL
 
     @Id
     private int column;
@@ -18,8 +19,23 @@ public class Seat implements Serializable {
     private ScreeningRoom screeningRoom;
 
     public Seat(int row, int column, ScreeningRoom screeningRoom){
-        this.row = row;
+        this.line = row;
         this.column = column;
         this.screeningRoom = screeningRoom;
+    }
+
+    public Seat() {};
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Seat seat = (Seat) o;
+        return line == seat.line && column == seat.column && Objects.equals(screeningRoom, seat.screeningRoom);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(line, column, screeningRoom);
     }
 }
