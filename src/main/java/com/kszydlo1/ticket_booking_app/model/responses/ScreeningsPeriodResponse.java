@@ -3,9 +3,9 @@ package com.kszydlo1.ticket_booking_app.model.responses;
 import java.util.Calendar;
 
 public class ScreeningsPeriodResponse {
+    private long screeningId;
     private String title;
     private Calendar startTime;
-    private long screeningRoomId;
 
     public String getTitle() {
         return title;
@@ -23,11 +23,11 @@ public class ScreeningsPeriodResponse {
         this.startTime = startTime;
     }
 
-    public long getScreeningRoomId() {
-        return screeningRoomId;
+    public long getScreeningId() {
+        return screeningId;
     }
 
-    public void setScreeningRoomId(long screeningRoomId) {
-        this.screeningRoomId = screeningRoomId;
+    public void setScreeningId(long screeningId) {
+        this.screeningId = screeningId;
     }
 }

@@ -36,7 +36,7 @@ public class View {
                 .collect(Collectors.toList());
         for (Screening screening : screenings) {
             ScreeningsPeriodResponse screeningsPeriodResponse = new ScreeningsPeriodResponse();
-            screeningsPeriodResponse.setScreeningRoomId(screening.getScreeningRoom().getId());
+            screeningsPeriodResponse.setScreeningId(screening.getScreeningId());
             screeningsPeriodResponse.setTitle(screening.getMovie().getTitle());
             screeningsPeriodResponse.setStartTime(screening.getStartTime());
 
@@ -44,4 +44,7 @@ public class View {
         }
         return response;
     }
+
+    //@GetMapping("/screening")
+    //public Vector showSeats(@RequestBody )
 }

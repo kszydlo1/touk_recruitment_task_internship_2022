@@ -8,16 +8,17 @@ import java.util.Objects;
 
 @Table(name = "screenings")
 @Entity
-@IdClass(ScreeningPK.class)
 public class Screening implements Serializable {
     @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    private long screeningId;
+
     private Calendar startTime;
 
-    @Id
     @ManyToOne
     private Movie movie;
 
-    @Id
+
     @ManyToOne
     private ScreeningRoom screeningRoom;
 
@@ -53,4 +54,6 @@ public class Screening implements Serializable {
     public ScreeningRoom getScreeningRoom() {
         return screeningRoom;
     }
+
+    public long getScreeningId() { return screeningId;}
 }
