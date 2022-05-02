@@ -1,8 +1,7 @@
-package com.kszydlo1.ticket_booking_app.model;
+package com.kszydlo1.ticket_booking_app.model.database;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Date;
 import java.util.Objects;
 
 @Table(name = "seat_selections")

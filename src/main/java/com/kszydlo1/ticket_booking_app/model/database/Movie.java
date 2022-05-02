@@ -1,11 +1,12 @@
-package com.kszydlo1.ticket_booking_app.model;
+package com.kszydlo1.ticket_booking_app.model.database;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.List;
 
 @Table(name = "movies")
 @Entity
-public class Movie {
+public class Movie implements Serializable {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private long id;
@@ -21,7 +22,15 @@ public class Movie {
 
     public Movie() {};
 
+    public long getId() {
+        return id;
+    }
+
     public String getTitle(){
         return title;
+    }
+
+    public List getScreenings() {
+        return screenings;
     }
 }

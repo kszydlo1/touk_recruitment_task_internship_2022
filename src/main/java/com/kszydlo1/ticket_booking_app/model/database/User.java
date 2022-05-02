@@ -1,4 +1,4 @@
-package com.kszydlo1.ticket_booking_app.model;
+package com.kszydlo1.ticket_booking_app.model.database;
 
 import javax.persistence.*;
 import java.util.List;

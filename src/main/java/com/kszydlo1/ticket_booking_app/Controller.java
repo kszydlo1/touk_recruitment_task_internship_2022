@@ -1,6 +1,6 @@
 package com.kszydlo1.ticket_booking_app;
 
-import com.kszydlo1.ticket_booking_app.model.User;
+//import com.kszydlo1.ticket_booking_app.repository.ScreeningRepository;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 @RestController
 public class Controller {
     @Autowired
-    private ModelRepository repository;
+    //private ScreeningRepository repository;
 
     @GetMapping("/example_controller")
     public String example_controller() {
