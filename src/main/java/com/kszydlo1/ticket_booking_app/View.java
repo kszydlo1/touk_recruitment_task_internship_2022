@@ -1,8 +1,9 @@
 package com.kszydlo1.ticket_booking_app;
 
 import com.kszydlo1.ticket_booking_app.model.database.Screening;
-import com.kszydlo1.ticket_booking_app.model.requests.ScreeningsPeriod;
+import com.kszydlo1.ticket_booking_app.model.requests.ScreeningsPeriodRequest;
 
+import com.kszydlo1.ticket_booking_app.model.responses.ScreeningsPeriodResponse;
 import com.kszydlo1.ticket_booking_app.repository.ScreeningRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.*;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @RestController
@@ -27,15 +27,20 @@ public class View {
     //}
 
     @GetMapping("/screenings")
-    public Map showScreenings(@RequestBody ScreeningsPeriod sp){
-        Map response = new HashMap<String, Calendar>();
+    public Vector showScreenings(@RequestBody ScreeningsPeriodRequest sp){
+        Vector response = new Vector<ScreeningsPeriodResponse>();
         List<Screening> screenings = (List<Screening>) repository.findAll()
                 .stream()
                 .filter(screening -> screening.getStartTime().after(sp.getStartDate())
                         && screening.getStartTime().before(sp.getEndDate()))
                 .collect(Collectors.toList());
         for (Screening screening : screenings) {
-            response.put(screening.getMovie().getTitle(), screening.getStartTime());
+            ScreeningsPeriodResponse screeningsPeriodResponse = new ScreeningsPeriodResponse();
+            screeningsPeriodResponse.setScreeningRoomId(screening.getScreeningRoom().getId());
+            screeningsPeriodResponse.setTitle(screening.getMovie().getTitle());
+            screeningsPeriodResponse.setStartTime(screening.getStartTime());
+
+            response.add(screeningsPeriodResponse);
         }
         return response;
     }

@@ -1,20 +1,9 @@
 package com.kszydlo1.ticket_booking_app.model.requests;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
-
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import java.io.Serializable;
-import java.time.ZoneOffset;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.Objects;
-import java.util.TimeZone;
 
 
-public class ScreeningsPeriod {
+public class ScreeningsPeriodRequest {
 
     private String yyyyMMDD;
 
