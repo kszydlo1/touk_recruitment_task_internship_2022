@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface ScreeningRepository extends CrudRepository<Screening, Long> {
     List<Screening> findAll();
+    Screening findById(long screeningId);
 }

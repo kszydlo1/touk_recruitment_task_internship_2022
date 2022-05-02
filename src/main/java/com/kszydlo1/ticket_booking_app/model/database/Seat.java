@@ -6,6 +6,7 @@ import java.util.Objects;
 
 @Table(name = "seats")
 @Entity
+@IdClass(SeatPK.class)
 public class Seat implements Serializable {
     @Id
     private int line;       // 'row' word is reserved in SQL
@@ -16,6 +17,7 @@ public class Seat implements Serializable {
     @Id
     @ManyToOne
     private ScreeningRoom screeningRoom;
+
 
     public Seat(int row, int column, ScreeningRoom screeningRoom){
         this.line = row;
@@ -36,5 +38,17 @@ public class Seat implements Serializable {
     @Override
     public int hashCode() {
         return Objects.hash(line, column, screeningRoom);
+    }
+
+    public int getLine() {
+        return line;
+    }
+
+    public int getColumn() {
+        return column;
+    }
+
+    public ScreeningRoom getScreeningRoom() {
+        return screeningRoom;
     }
 }

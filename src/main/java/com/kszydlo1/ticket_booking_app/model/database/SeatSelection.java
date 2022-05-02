@@ -6,6 +6,7 @@ import java.util.Objects;
 
 @Table(name = "seat_selections")
 @Entity
+@IdClass(SeatSelectionPK.class)
 public class SeatSelection implements Serializable {
     @Id
     @ManyToOne
@@ -17,6 +18,9 @@ public class SeatSelection implements Serializable {
     @Id
     @ManyToOne
     private Screening screening;
+
+    @ManyToOne
+    private Ticket ticket = null;
 
     public SeatSelection(Seat seat, Reservation reservation, Screening screening){
         this.seat = seat;
@@ -37,5 +41,13 @@ public class SeatSelection implements Serializable {
     @Override
     public int hashCode() {
         return Objects.hash(seat, reservation, screening);
+    }
+
+    public Screening getScreening() {
+        return screening;
+    }
+
+    public Seat getSeat() {
+        return seat;
     }
 }
