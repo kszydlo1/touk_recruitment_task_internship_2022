@@ -8,6 +8,7 @@ import com.kszydlo1.ticket_booking_app.repository.ScreeningRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Comparator;
@@ -22,7 +23,7 @@ public class ScreeningsView {
     @Autowired
     private ScreeningRepository screeningRepository;
 
-    @GetMapping("/screenings")
+    @GetMapping(value = "/screenings", produces = "application/json;charset=UTF-8")
     public Vector showScreenings(@RequestBody ScreeningsPeriodRequest sp){
         try {
             if (sp.getStartDate().after(sp.getEndDate()))
