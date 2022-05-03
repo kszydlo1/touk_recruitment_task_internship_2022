@@ -3,6 +3,7 @@ package com.kszydlo1.ticket_booking_app;
 import com.kszydlo1.ticket_booking_app.model.database.Screening;
 import com.kszydlo1.ticket_booking_app.model.database.Seat;
 import com.kszydlo1.ticket_booking_app.model.database.SeatSelection;
+import com.kszydlo1.ticket_booking_app.model.requests.BookingRequest;
 import com.kszydlo1.ticket_booking_app.model.requests.ScreeningsPeriodRequest;
 
 import com.kszydlo1.ticket_booking_app.model.responses.ScreeningsPeriodResponse;
@@ -29,6 +30,8 @@ public class View {
 
     @Autowired
     private SeatSelectionRepository seatSelectionRepository;
+
+
 
     //@GetMapping("/example_view")
     //public String example_view(@RequestParam String atrybut) {
@@ -84,4 +87,6 @@ public class View {
         }
         return response;
     }
+
+
 }

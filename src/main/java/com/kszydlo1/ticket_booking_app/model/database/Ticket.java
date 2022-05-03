@@ -20,4 +20,16 @@ public class Ticket implements Serializable {
 
     @OneToMany(targetEntity = Seat.class)
     private List seats;
+
+    public String getType() {
+        return type;
+    }
+
+    public int getPrice() {
+        return price;
+    }
+
+    public List getSeats() {
+        return seats;
+    }
 }

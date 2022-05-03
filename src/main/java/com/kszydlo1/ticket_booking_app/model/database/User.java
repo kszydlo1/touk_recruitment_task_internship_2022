@@ -8,7 +8,7 @@ import java.util.List;
 public class User {
     @Id
     @GeneratedValue
-    private long id;
+    private long userId;
 
     private String firstName;
     private String lastName;
@@ -22,4 +22,20 @@ public class User {
     }
 
     public User() {};
+
+    public long getId() {
+        return userId;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public List getReservations() {
+        return reservations;
+    }
 }

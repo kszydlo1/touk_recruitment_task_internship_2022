@@ -2,13 +2,15 @@ package com.kszydlo1.ticket_booking_app.model.database;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Objects;
 
 @Table(name = "reservations")
 @Entity
+@IdClass(ReservationPK.class)
 public class Reservation implements Serializable {
-    private Date date;
+    private Calendar date;
 
     @Id
     @ManyToOne
@@ -18,7 +20,7 @@ public class Reservation implements Serializable {
     @ManyToOne
     private User user;
 
-    public Reservation(Screening screening, User user, Date date){
+    public Reservation(Screening screening, User user, Calendar date){
         this.screening = screening;
         this.user = user;
         this.date = date;
@@ -37,5 +39,9 @@ public class Reservation implements Serializable {
     @Override
     public int hashCode() {
         return Objects.hash(date, screening, user);
+    }
+
+    public Calendar getDate() {
+        return date;
     }
 }

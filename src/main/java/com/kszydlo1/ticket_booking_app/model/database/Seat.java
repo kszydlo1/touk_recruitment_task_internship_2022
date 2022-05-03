@@ -51,4 +51,16 @@ public class Seat implements Serializable {
     public ScreeningRoom getScreeningRoom() {
         return screeningRoom;
     }
+
+    public void setLine(int line) {
+        this.line = line;
+    }
+
+    public void setColumn(int column) {
+        this.column = column;
+    }
+
+    public void setScreeningRoom(ScreeningRoom screeningRoom) {
+        this.screeningRoom = screeningRoom;
+    }
 }
