@@ -63,7 +63,7 @@ public class View {
     @GetMapping("/screening/{screeningId}")
     public Vector showSeats(@PathVariable long screeningId) {
         Vector response = new Vector<>();
-        Screening screening = screeningRepository.findById(screeningId);
+        Screening screening = screeningRepository.findById(screeningId).get();
         List <Seat> allSeats = (List<Seat>) seatRepository.findAll()
                 .stream()
                 .filter(seat -> seat.getScreeningRoom() == screening.getScreeningRoom())
