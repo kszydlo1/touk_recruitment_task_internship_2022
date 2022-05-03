@@ -21,3 +21,9 @@ After boot, try to run demo script:
 ```shell
 sh demo.sh
 ```
+
+## Tests
+Integration tests are in tests.sh. To run them, run:
+```shell
+sh tests.sh
+```

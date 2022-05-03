@@ -6,18 +6,13 @@ import com.kszydlo1.ticket_booking_app.model.requests.BookingRequest;
 import com.kszydlo1.ticket_booking_app.model.requests.SeatSelectionRequest;
 import com.kszydlo1.ticket_booking_app.model.responses.BookingResponse;
 import com.kszydlo1.ticket_booking_app.repository.*;
-import org.hibernate.FetchNotFoundException;
-import org.hibernate.annotations.NotFound;
-import org.springframework.http.HttpStatus;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.server.ResponseStatusException;
 
-import javax.persistence.EntityNotFoundException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -47,6 +42,7 @@ public class BookingController {
     private class NoBookingTimeException extends Exception {};
     private class NameNotAcceptableException extends Exception {};
     private class NoSeatException extends  Exception {};
+    private class BookingTakenSeatsException extends Exception {};
 
     @GetMapping("/booking/{screeningId}")
     public BookingResponse bookSeats(@PathVariable long screeningId, @RequestBody BookingRequest bookingRequest) {
@@ -82,12 +78,15 @@ public class BookingController {
         catch (NoSeatException e) {
             return new BookingResponse(Constants.Controllers.BOOKING_STATUS_EXCEPTION,
                     Constants.Controllers.NO_SEAT_EXCEPTION);
+        } catch (BookingTakenSeatsException e) {
+            return new BookingResponse(Constants.Controllers.BOOKING_STATUS_EXCEPTION,
+                    Constants.Controllers.BOOKING_TAKEN_SEAT_EXCEPTION);
         }
 
     }
 
     private void checkConstraints(Screening screening, BookingRequest bookingRequest) throws NoBookingTimeException,
-            NameNotAcceptableException, NoSeatException {
+            NameNotAcceptableException, NoSeatException, BookingTakenSeatsException {
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.MINUTE, -Constants.Controllers.NO_BOOKING_TIME_MINUTES_CONST);
         if (screening.getStartTime().after(calendar))
@@ -104,6 +103,20 @@ public class BookingController {
         }
         if (bookingRequest.getSeatSelectionRequests().size() < 1)
             throw new NoSeatException();
+        if (bookingTakenSeats(screening, bookingRequest.getSeatSelectionRequests())){
+            throw new BookingTakenSeatsException();
+        }
+    }
+
+    private boolean bookingTakenSeats(Screening screening, List <SeatSelectionRequest> seatSelectionRequests){
+        List <SeatSelection> takenSeats = getTakenSeats(screening);
+        for (SeatSelectionRequest seatSelectionRequest : seatSelectionRequests){
+            for (SeatSelection takenSeat : takenSeats){
+                if (seatSelectionRequest.getColumn() == takenSeat.getSeat().getColumn() && seatSelectionRequest.getLine() == takenSeat.getSeat().getLine())
+                    return true;
+            }
+        }
+        return false;
     }
 
     private User getUser(BookingRequest bookingRequest) {
@@ -158,5 +171,13 @@ public class BookingController {
         Calendar expirationTime = reservation.getDate();
         expirationTime.add(Calendar.MINUTE, expirationTimeMinutes.get().getConstValue());
         return expirationTime;
+    }
+
+    private List<SeatSelection> getTakenSeats(Screening screening) {
+        List <SeatSelection> takenSeats = seatSelectionRepository.findAll()
+                .stream()
+                .filter(seatSelection -> seatSelection.getScreening() == screening)
+                .collect(Collectors.toList());
+        return takenSeats;
     }
 }

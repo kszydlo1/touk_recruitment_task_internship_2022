@@ -35,7 +35,7 @@ public class SeatsView {
             Screening screening = screeningRepository.findById(screeningId).get();
             List<Seat> allSeats = getAllSeats(screening);
             List<SeatSelection> takenSeats = getTakenSeats(screening);
-            Vector response = createResponse(screening, allSeats, takenSeats);
+            Vector <SeatsResponse> response = createResponse(screening, allSeats, takenSeats);
 
             return response;
         }
@@ -62,7 +62,7 @@ public class SeatsView {
         return takenSeats;
     }
 
-    private Vector createResponse(Screening screening, List<Seat> allSeats, List <SeatSelection> takenSeats) {
+    private Vector <SeatsResponse> createResponse(Screening screening, List<Seat> allSeats, List <SeatSelection> takenSeats) {
         Vector <SeatsResponse> response = new Vector<>();
         for(Seat seat : allSeats) {
             SeatsResponse seatsResponse = new SeatsResponse();
