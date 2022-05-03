@@ -1,4 +1,4 @@
-package com.kszydlo1.ticket_booking_app.controller;
+package com.kszydlo1.ticket_booking_app.controllers;
 
 import com.kszydlo1.ticket_booking_app.Constants;
 import com.kszydlo1.ticket_booking_app.model.database.*;
@@ -100,7 +100,7 @@ public class BookingController {
 
     private Calendar getExpirationTime(Reservation reservation) {
         Optional<Constant> expirationTimeMinutes = constantRepository
-                .findById(Constants.Controller.EXPIRATION_TIME_CONST);
+                .findById(Constants.Controllers.EXPIRATION_TIME_CONST);
         Calendar expirationTime = reservation.getDate();
         expirationTime.add(Calendar.MINUTE, expirationTimeMinutes.get().getConstValue());
         return expirationTime;
