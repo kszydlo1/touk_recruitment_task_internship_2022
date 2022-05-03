@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Vector;
 import java.util.stream.Collectors;
 
@@ -30,12 +31,19 @@ public class SeatsView {
 
     @GetMapping("/screening/{screeningId}")
     public Vector showSeats(@PathVariable long screeningId) {
-        Screening screening = screeningRepository.findById(screeningId).get();
-        List<Seat> allSeats = getAllSeats(screening);
-        List<SeatSelection> takenSeats = getTakenSeats(screening);
-        Vector response = createResponse(screening, allSeats, takenSeats);
+        try {
+            Screening screening = screeningRepository.findById(screeningId).get();
+            List<Seat> allSeats = getAllSeats(screening);
+            List<SeatSelection> takenSeats = getTakenSeats(screening);
+            Vector response = createResponse(screening, allSeats, takenSeats);
 
-        return response;
+            return response;
+        }
+        catch (NoSuchElementException e) {
+            Vector response = new Vector<>();
+            response.add(Constants.Views.NO_SUCH_SCREENING_EXCEPTION);
+            return response;
+        }
     }
 
     private List<Seat> getAllSeats(Screening screening) {
@@ -47,7 +55,7 @@ public class SeatsView {
     }
 
     private List<SeatSelection> getTakenSeats(Screening screening) {
-        List <SeatSelection> takenSeats = (List<SeatSelection>) seatSelectionRepository.findAll()
+        List <SeatSelection> takenSeats = seatSelectionRepository.findAll()
                 .stream()
                 .filter(seatSelection -> seatSelection.getScreening() == screening)
                 .collect(Collectors.toList());

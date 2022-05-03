@@ -9,5 +9,6 @@ public class Constants {
         public static String TAKEN_SEAT_CONST = "taken";
 
         public static String START_END_DATE_EXCEPTION = "Exception: Start date cannot be after end date";
+        public static String NO_SUCH_SCREENING_EXCEPTION = "Exception: There is no such screening";
     }
 }
