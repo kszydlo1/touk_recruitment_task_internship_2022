@@ -14,7 +14,7 @@ public class Movie implements Serializable {
     private String title;
 
     @OneToMany (targetEntity = Screening.class)
-    private List screenings;
+    private List <Screening> screenings;
 
     public Movie(String title){
         this.title = title;
@@ -30,7 +30,7 @@ public class Movie implements Serializable {
         return title;
     }
 
-    public List getScreenings() {
+    public List <Screening> getScreenings() {
         return screenings;
     }
 }

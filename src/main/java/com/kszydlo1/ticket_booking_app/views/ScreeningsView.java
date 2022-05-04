@@ -24,25 +24,26 @@ public class ScreeningsView {
     private ScreeningRepository screeningRepository;
 
     @GetMapping(value = "/screenings", produces = "application/json;charset=UTF-8")
+    @ResponseBody
     public Vector showScreenings(@RequestBody ScreeningsPeriodRequest sp){
         try {
             if (sp.getStartDate().after(sp.getEndDate()))
                 throw new StartEndDateException();
 
-            Vector response = getResponse(sp);
+            Vector <ScreeningsPeriodResponse> response = getResponse(sp);
             response = getSortedResponse(response);
 
             return response;
         }
         catch (StartEndDateException e) {
-            Vector response = new Vector<>();
+            Vector <String> response = new Vector<>();
             response.add(Constants.Views.START_END_DATE_EXCEPTION);
             return response;
         }
     }
 
-    private Vector getResponse(ScreeningsPeriodRequest sp) {
-        Vector response = new Vector<ScreeningsPeriodResponse>();
+    private Vector <ScreeningsPeriodResponse> getResponse(ScreeningsPeriodRequest sp) {
+        Vector <ScreeningsPeriodResponse> response = new Vector<ScreeningsPeriodResponse>();
         List<Screening> screenings = (List<Screening>) screeningRepository.findAll()
                 .stream()
                 .filter(screening -> screening.getStartTime().after(sp.getStartDate())
@@ -59,8 +60,8 @@ public class ScreeningsView {
         return response;
     }
 
-    private Vector getSortedResponse(Vector unsortedVec) {
-        Vector sortedVec = new Vector<>(unsortedVec);
+    private Vector <ScreeningsPeriodResponse> getSortedResponse(Vector <ScreeningsPeriodResponse> unsortedVec) {
+        Vector <ScreeningsPeriodResponse> sortedVec = new Vector<ScreeningsPeriodResponse>(unsortedVec);
         sortedVec.sort(new Comparator<ScreeningsPeriodResponse>() {
             @Override
             public int compare(ScreeningsPeriodResponse s1, ScreeningsPeriodResponse s2) {

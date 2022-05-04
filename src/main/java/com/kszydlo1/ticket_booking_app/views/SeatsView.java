@@ -11,6 +11,7 @@ import com.kszydlo1.ticket_booking_app.repository.SeatSelectionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -30,6 +31,7 @@ public class SeatsView {
     private SeatSelectionRepository seatSelectionRepository;
 
     @GetMapping("/screening/{screeningId}")
+    @ResponseBody
     public Vector showSeats(@PathVariable long screeningId) {
         try {
             Screening screening = screeningRepository.findById(screeningId).get();
@@ -40,7 +42,7 @@ public class SeatsView {
             return response;
         }
         catch (NoSuchElementException e) {
-            Vector response = new Vector<>();
+            Vector <String> response = new Vector<>();
             response.add(Constants.Views.NO_SUCH_SCREENING_EXCEPTION);
             return response;
         }

@@ -14,7 +14,7 @@ public class User {
     private String lastName;
 
     @OneToMany (targetEntity = Reservation.class)
-    private List reservations;
+    private List <Reservation> reservations;
 
     public User(String firstName, String lastName){
         this.firstName = firstName;
@@ -35,7 +35,7 @@ public class User {
         return lastName;
     }
 
-    public List getReservations() {
+    public List <Reservation> getReservations() {
         return reservations;
     }
 }

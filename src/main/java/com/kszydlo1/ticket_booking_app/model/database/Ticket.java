@@ -19,7 +19,7 @@ public class Ticket implements Serializable {
     private int price;
 
     @OneToMany(targetEntity = Seat.class)
-    private List seats;
+    private List <Seat> seats;
 
     public String getType() {
         return type;
@@ -29,7 +29,7 @@ public class Ticket implements Serializable {
         return price;
     }
 
-    public List getSeats() {
+    public List <Seat> getSeats() {
         return seats;
     }
 }
