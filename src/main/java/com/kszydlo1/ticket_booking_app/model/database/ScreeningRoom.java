@@ -12,10 +12,10 @@ public class ScreeningRoom implements Serializable {
     private long id;
 
     @OneToMany (targetEntity = Screening.class)
-    private List screenings;
+    private List <Screening> screenings;
 
     @OneToMany (targetEntity = Seat.class)
-    private List seats;
+    private List <Seat> seats;
 
     public ScreeningRoom() {};
 
@@ -23,11 +23,19 @@ public class ScreeningRoom implements Serializable {
         return id;
     }
 
-    public List getScreenings() {
+    public List <Screening> getScreenings() {
         return screenings;
     }
 
-    public List getSeats() {
+    public List <Seat> getSeats() {
         return seats;
+    }
+
+    public int getMaxColumn() {
+        int maxColumn = 0;
+        for (Seat seat : this.seats)
+            if (seat.getColumn() > maxColumn)
+                maxColumn = seat.getColumn();
+        return maxColumn;
     }
 }

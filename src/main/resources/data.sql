@@ -25,7 +25,9 @@ INSERT INTO seats (screening_room_id, line, column) values (2, 1, 1);
 INSERT INTO seats (screening_room_id, line, column) values (2, 2, 1);
 INSERT INTO seats (screening_room_id, line, column) values (3, 1, 1);
 INSERT INTO seats (screening_room_id, line, column) values (3, 1, 2);
+INSERT INTO seats (screening_room_id, line, column) values (3, 1, 3);
 INSERT INTO seats (screening_room_id, line, column) values (3, 2, 1);
 INSERT INTO seats (screening_room_id, line, column) values (3, 2, 2);
+INSERT INTO seats (screening_room_id, line, column) values (3, 2, 3);
 
 INSERT INTO constants (name, const_value) values ('expirationTimeMinutes', 15);

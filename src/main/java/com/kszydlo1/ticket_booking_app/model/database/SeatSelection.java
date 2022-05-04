@@ -22,10 +22,11 @@ public class SeatSelection implements Serializable {
     @ManyToOne
     private Ticket ticket = null;
 
-    public SeatSelection(Seat seat, Reservation reservation, Screening screening){
+    public SeatSelection(Seat seat, Reservation reservation, Screening screening, Ticket ticket){
         this.seat = seat;
         this.reservation = reservation;
         this.screening = screening;
+        this.ticket = ticket;
     }
 
     public SeatSelection() {};

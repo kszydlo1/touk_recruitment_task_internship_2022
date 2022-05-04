@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.*;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 @RestController
@@ -39,10 +40,14 @@ public class BookingController {
     @Autowired
     private ConstantRepository constantRepository;
 
+    @Autowired
+    private SeatRepository seatRepository;
+
     private class NoBookingTimeException extends Exception {};
     private class NameNotAcceptableException extends Exception {};
     private class NoSeatException extends  Exception {};
     private class BookingTakenSeatsException extends Exception {};
+    private class EmptySeatBetweenTakenSeatsException extends Exception {};
 
     @GetMapping("/booking/{screeningId}")
     public BookingResponse bookSeats(@PathVariable long screeningId, @RequestBody BookingRequest bookingRequest) {
@@ -81,6 +86,9 @@ public class BookingController {
         } catch (BookingTakenSeatsException e) {
             return new BookingResponse(Constants.Controllers.BOOKING_STATUS_EXCEPTION,
                     Constants.Controllers.BOOKING_TAKEN_SEAT_EXCEPTION);
+        } catch (EmptySeatBetweenTakenSeatsException e) {
+            return new BookingResponse(Constants.Controllers.BOOKING_STATUS_EXCEPTION,
+                    Constants.Controllers.EMPTY_SEAT_BETWEEN_TAKEN_SEATS_EXCEPTION);
         }
 
     }
@@ -95,9 +103,7 @@ public class BookingController {
             throw new NameNotAcceptableException();
         if (!Character.isUpperCase(bookingRequest.getFirstName().charAt(0)))
             throw new NameNotAcceptableException();
-        //if (bookingRequest.getLastName().length() < Constants.Controllers.NAME_MIN_LENGTH)
-        //    throw new NameNotAcceptableException();
-        
+               
         String[] names = bookingRequest.getLastName().split("-");
         if (names.length > 2)
             throw new NameNotAcceptableException();
@@ -150,16 +156,51 @@ public class BookingController {
         return reservationRepository.save(reservation);
     }
 
-    @Transactional
-    private void saveSeatSelections(List <SeatSelectionRequest> req, ScreeningRoom sR, Reservation res, Screening sc) {
+    @Transactional(rollbackFor = Exception.class)
+    private void saveSeatSelections(List <SeatSelectionRequest> req, ScreeningRoom sR, Reservation res, Screening sc) throws EmptySeatBetweenTakenSeatsException {
         for (SeatSelectionRequest seatSelectionRequest : req) {
             int line = seatSelectionRequest.getLine();
             int column = seatSelectionRequest.getColumn();
-            String ticket = seatSelectionRequest.getTicket();
+            String ticketName = seatSelectionRequest.getTicket();
+            Ticket ticket = ticketRepository.findById(ticketName).get();
             Seat seat = new Seat(line, column, sR);
-            SeatSelection seatSelection = new SeatSelection(seat, res, sc);
+            SeatSelection seatSelection = new SeatSelection(seat, res, sc, ticket);
             seatSelectionRepository.save(seatSelection);
         }
+        checkNoSinglePlaceConstraint(sc, sR);
+    }
+    private void checkNoSinglePlaceConstraint(Screening sc, ScreeningRoom sR) throws EmptySeatBetweenTakenSeatsException {
+        List <SeatSelection> seatSelections = seatSelectionRepository.findAll()
+            .stream()
+            .filter(seatSelection -> seatSelection.getScreening() == sc)
+            .collect(Collectors.toList());
+        List <Seat> seats = seatRepository.findAll()
+            .stream()
+            .filter(seat -> seat.getScreeningRoom() == sR)
+            .collect(Collectors.toList());
+        for(SeatSelection seatSelection1 : seatSelections){
+            boolean correct = false;
+            for(Seat nextSeat : seats)
+                if (seatSelection1.getSeat().getLine() == nextSeat.getLine() &&
+                    seatSelection1.getSeat().getColumn() == nextSeat.getColumn() - 1)
+                        for (SeatSelection seatSelection2 : seatSelections)
+                            if (seatSelection2.getSeat() == nextSeat )
+                                correct = true;
+            
+            if(seatSelection1.getSeat().getColumn() == getMaxColumn(seats))
+                correct = true;
+            if(!correct)
+                throw new EmptySeatBetweenTakenSeatsException();
+                    
+        }
+    }
+
+    private int getMaxColumn(List <Seat> seats) {
+        int maxColumn = 0;
+        for (Seat seat : seats)
+            if (seat.getColumn() > maxColumn)
+                maxColumn = seat.getColumn();
+        return maxColumn;
     }
 
     private int getTotalAmountToPay(List <SeatSelectionRequest> req) {

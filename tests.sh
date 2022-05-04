@@ -110,6 +110,22 @@ curl -X GET localhost:8080/booking/6 \
          [
             {\"line\": 2, \"column\": 1, \"ticket\": \"adult\"},
             {\"line\": 2, \"column\": 2, \"ticket\": \"child\"},
-            {\"line\": 1, \"column\": 1, \"ticket\": \"student\"}
+            {\"line\": 2, \"column\": 3, \"ticket\": \"student\"}
+            ], \"firstName\": \"Kamil\", \"lastName\": \"Aaa-Baa\"}"
+echo "\n"
+
+curl -X GET localhost:8080/booking/6 \
+    -H "Content-Type: application/json" \
+    -d "{\"seatSelectionRequests\": 
+         [
+            {\"line\": 1, \"column\": 1, \"ticket\": \"adult\"}
+            ], \"firstName\": \"Kamil\", \"lastName\": \"Aaa-Baa\"}"
+echo "\n"
+
+curl -X GET localhost:8080/booking/6 \
+    -H "Content-Type: application/json" \
+    -d "{\"seatSelectionRequests\": 
+         [
+            {\"line\": 1, \"column\": 3, \"ticket\": \"adult\"}
             ], \"firstName\": \"Kamil\", \"lastName\": \"Aaa-Baa\"}"
 echo "\n"
