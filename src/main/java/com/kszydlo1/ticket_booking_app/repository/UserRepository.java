@@ -1,6 +1,5 @@
 package com.kszydlo1.ticket_booking_app.repository;
 
-import com.kszydlo1.ticket_booking_app.model.database.Screening;
 import com.kszydlo1.ticket_booking_app.model.database.User;
 import org.springframework.data.repository.CrudRepository;
 

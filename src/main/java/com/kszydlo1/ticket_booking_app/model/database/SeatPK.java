@@ -30,4 +30,6 @@ public class SeatPK implements Serializable {
     public void setScreeningRoom(long screeningRoom) {
         this.screeningRoom = screeningRoom;
     }
+
+    
 }

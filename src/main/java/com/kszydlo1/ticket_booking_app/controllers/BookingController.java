@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.*;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 @RestController
@@ -50,6 +49,7 @@ public class BookingController {
     private class EmptySeatBetweenTakenSeatsException extends Exception {};
 
     @GetMapping("/booking/{screeningId}")
+    @Transactional(rollbackFor = Exception.class)
     public BookingResponse bookSeats(@PathVariable long screeningId, @RequestBody BookingRequest bookingRequest) {
         try {
             User user = getUser(bookingRequest);
@@ -170,14 +170,28 @@ public class BookingController {
         checkNoSinglePlaceConstraint(sc, sR);
     }
     private void checkNoSinglePlaceConstraint(Screening sc, ScreeningRoom sR) throws EmptySeatBetweenTakenSeatsException {
+        List <SeatSelection> seatSelections = getSeatSelections(sc);
+        List <Seat> seats = getSeats(sR);
+        analyseSeatsSelections(seatSelections, seats);
+    }
+
+    private List <SeatSelection> getSeatSelections(Screening sc){
         List <SeatSelection> seatSelections = seatSelectionRepository.findAll()
             .stream()
             .filter(seatSelection -> seatSelection.getScreening() == sc)
             .collect(Collectors.toList());
+        return seatSelections;
+    }
+
+    private List <Seat> getSeats(ScreeningRoom sR){
         List <Seat> seats = seatRepository.findAll()
             .stream()
             .filter(seat -> seat.getScreeningRoom() == sR)
             .collect(Collectors.toList());
+        return seats;
+    }
+
+    private void analyseSeatsSelections(List <SeatSelection> seatSelections, List <Seat> seats) throws EmptySeatBetweenTakenSeatsException{
         for(SeatSelection seatSelection1 : seatSelections){
             boolean correct = false;
             for(Seat nextSeat : seats)
@@ -191,7 +205,6 @@ public class BookingController {
                 correct = true;
             if(!correct)
                 throw new EmptySeatBetweenTakenSeatsException();
-                    
         }
     }
 

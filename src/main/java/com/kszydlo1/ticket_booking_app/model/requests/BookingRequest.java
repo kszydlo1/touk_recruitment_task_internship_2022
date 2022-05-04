@@ -1,7 +1,5 @@
 package com.kszydlo1.ticket_booking_app.model.requests;
 
-import org.json.JSONObject;
-
 import java.util.List;
 
 public class BookingRequest {
