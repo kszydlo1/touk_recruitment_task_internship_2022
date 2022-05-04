@@ -93,14 +93,21 @@ public class BookingController {
             throw new NoBookingTimeException();
         if (bookingRequest.getFirstName().length() < Constants.Controllers.NAME_MIN_LENGTH)
             throw new NameNotAcceptableException();
-        if (bookingRequest.getLastName().length() < Constants.Controllers.NAME_MIN_LENGTH)
+        if (!Character.isUpperCase(bookingRequest.getFirstName().charAt(0)))
             throw new NameNotAcceptableException();
-        if (bookingRequest.getLastName().contains("-")) {
-            String[] names = bookingRequest.getLastName().split("-");
-            for (String name : names)
-                if (name.length() < Constants.Controllers.NAME_MIN_LENGTH)
-                    throw new NameNotAcceptableException();
+        //if (bookingRequest.getLastName().length() < Constants.Controllers.NAME_MIN_LENGTH)
+        //    throw new NameNotAcceptableException();
+        
+        String[] names = bookingRequest.getLastName().split("-");
+        if (names.length > 2)
+            throw new NameNotAcceptableException();
+        for (String name : names) {
+            if (name.length() < Constants.Controllers.NAME_MIN_LENGTH)
+                throw new NameNotAcceptableException();
+            if (!Character.isUpperCase(name.charAt(0)))
+                throw new NameNotAcceptableException();
         }
+        
         if (bookingRequest.getSeatSelectionRequests().size() < 1)
             throw new NoSeatException();
         if (bookingTakenSeats(screening, bookingRequest.getSeatSelectionRequests())){

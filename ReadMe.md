@@ -27,3 +27,4 @@ Integration tests are in tests.sh. To run them, run:
 ```shell
 sh tests.sh
 ```
+Remember that you have to restart the backend app until running tests if you runned demo before.
