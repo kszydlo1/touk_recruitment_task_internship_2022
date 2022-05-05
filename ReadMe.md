@@ -1,7 +1,7 @@
 # Ticket booking app
 ## Assumptions
 * User must pay within next 15 minutes since booking.
-* There cannot be a single place between taken place and end of the row, too.
+
 ## Build
 Firstly, you need to have maven installed.
 ```shell
