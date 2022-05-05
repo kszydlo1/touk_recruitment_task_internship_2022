@@ -104,6 +104,9 @@ curl -X GET localhost:8080/booking/6 \
             ], \"firstName\": \"Kamil\", \"lastName\": \"Aaa-Baa-Caa\"}"
 echo "\n"
 
+curl -X GET localhost:8080/screening/6
+echo "\n"
+
 curl -X GET localhost:8080/booking/6 \
     -H "Content-Type: application/json" \
     -d "{\"seatSelectionRequests\": 
@@ -114,6 +117,9 @@ curl -X GET localhost:8080/booking/6 \
             ], \"firstName\": \"Kamil\", \"lastName\": \"Aaa-Baa\"}"
 echo "\n"
 
+curl -X GET localhost:8080/screening/6
+echo "\n"
+
 curl -X GET localhost:8080/booking/6 \
     -H "Content-Type: application/json" \
     -d "{\"seatSelectionRequests\": 
@@ -122,10 +128,16 @@ curl -X GET localhost:8080/booking/6 \
             ], \"firstName\": \"Kamil\", \"lastName\": \"Aaa-Baa\"}"
 echo "\n"
 
+curl -X GET localhost:8080/screening/6
+echo "\n"
+
 curl -X GET localhost:8080/booking/6 \
     -H "Content-Type: application/json" \
     -d "{\"seatSelectionRequests\": 
          [
             {\"line\": 1, \"column\": 3, \"ticket\": \"adult\"}
             ], \"firstName\": \"Kamil\", \"lastName\": \"Aaa-Baa\"}"
+echo "\n"
+
+curl -X GET localhost:8080/screening/6
 echo "\n"

@@ -70,11 +70,10 @@ public class SeatsView {
             SeatsResponse seatsResponse = new SeatsResponse();
             seatsResponse.setLine(seat.getLine());
             seatsResponse.setColumn(seat.getColumn());
-            takenSeats.stream().filter(takenSeat -> takenSeat.getSeat() == seat).collect(Collectors.toList());
-            if(takenSeats.isEmpty())
-                seatsResponse.setStatus(Constants.Views.FREE_SEAT_CONST);
-            else
-                seatsResponse.setStatus(Constants.Views.TAKEN_SEAT_CONST);
+            seatsResponse.setStatus(Constants.Views.FREE_SEAT_CONST);
+            for (SeatSelection takenSeat : takenSeats)
+                if (seat.getColumn() == takenSeat.getSeat().getColumn() && seat.getLine() == takenSeat.getSeat().getLine())
+                    seatsResponse.setStatus(Constants.Views.TAKEN_SEAT_CONST);
             response.add(seatsResponse);
         }
         return response;

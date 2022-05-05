@@ -9,4 +9,5 @@ import java.util.List;
 public interface SeatSelectionRepository extends CrudRepository<SeatSelection, SeatSelectionPK> {
     List<SeatSelection> findAll();
     SeatSelection save(SeatSelection seatSelection);
+    void delete(SeatSelection seatSelection);
 }

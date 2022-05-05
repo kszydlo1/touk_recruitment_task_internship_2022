@@ -13,8 +13,8 @@ public class Constants {
                 + NO_BOOKING_TIME_MINUTES_CONST + " before the screening begins";
         public static String NAME_NOT_ACCEPTABLE_EXCEPTION = "Exception: Name not acceptable";
         public static String NO_SEAT_EXCEPTION = "Exception: No seat in request";
-        public static String BOOKING_TAKEN_SEAT_EXCEPTION = "Exception: BOOKING_TAKEN_SEAT";
-        public static String EMPTY_SEAT_BETWEEN_TAKEN_SEATS_EXCEPTION = "Exception: EMPTY_SEAT_BETWEEN_TAKEN_SEATS";
+        public static String BOOKING_TAKEN_SEAT_EXCEPTION = "Exception: booking taken seat";
+        public static String EMPTY_SEAT_BETWEEN_TAKEN_SEATS_EXCEPTION = "Exception: empty seat between taken seat";
     }
     public static class Views {
         public static String FREE_SEAT_CONST = "free";

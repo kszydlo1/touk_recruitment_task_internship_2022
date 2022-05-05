@@ -24,7 +24,12 @@ sh demo.sh
 ```
 
 ## Tests
-Integration tests are in tests.sh. To run them, run:
+Integration tests are in tests.sh. 
+Firstly, you need to run backend app:
+```shell
+java -jar ./target/ticket_booking_app-0.0.1-SNAPSHOT.jar
+```
+Nextly, to run tests, run:
 ```shell
 sh tests.sh
 ```

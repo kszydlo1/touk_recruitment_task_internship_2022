@@ -5,7 +5,9 @@ import com.kszydlo1.ticket_booking_app.model.database.*;
 import com.kszydlo1.ticket_booking_app.model.requests.BookingRequest;
 import com.kszydlo1.ticket_booking_app.model.requests.SeatSelectionRequest;
 import com.kszydlo1.ticket_booking_app.model.responses.BookingResponse;
+import com.kszydlo1.ticket_booking_app.model.responses.SeatsResponse;
 import com.kszydlo1.ticket_booking_app.repository.*;
+
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -160,21 +162,31 @@ public class BookingController {
 
     @Transactional(rollbackFor = Exception.class)
     private void saveSeatSelections(List <SeatSelectionRequest> req, ScreeningRoom sR, Reservation res, Screening sc) throws EmptySeatBetweenTakenSeatsException {
-        for (SeatSelectionRequest seatSelectionRequest : req) {
-            int line = seatSelectionRequest.getLine();
-            int column = seatSelectionRequest.getColumn();
-            String ticketName = seatSelectionRequest.getTicket();
-            Ticket ticket = ticketRepository.findById(ticketName).get();
-            Seat seat = new Seat(line, column, sR);
-            SeatSelection seatSelection = new SeatSelection(seat, res, sc, ticket);
-            seatSelectionRepository.save(seatSelection);
+        Vector <SeatSelection> seatSelections = new Vector<SeatSelection>();
+        try {
+            for (SeatSelectionRequest seatSelectionRequest : req) {
+                int line = seatSelectionRequest.getLine();
+                int column = seatSelectionRequest.getColumn();
+                String ticketName = seatSelectionRequest.getTicket();
+                Ticket ticket = ticketRepository.findById(ticketName).get();
+                Seat seat = new Seat(line, column, sR);
+                SeatSelection seatSelection = new SeatSelection(seat, res, sc, ticket);
+                seatSelections.add(seatSelection);
+                seatSelectionRepository.save(seatSelection);
         }
         checkNoSinglePlaceConstraint(sc, sR);
+        }
+        catch (Exception e) {
+            for (SeatSelection seatSelection : seatSelections)
+                seatSelectionRepository.delete(seatSelection);
+            throw new EmptySeatBetweenTakenSeatsException();
+        }
     }
-    private void checkNoSinglePlaceConstraint(Screening sc, ScreeningRoom sR) throws EmptySeatBetweenTakenSeatsException {
+    private void checkNoSinglePlaceConstraint(Screening sc, ScreeningRoom sR) throws Exception {
         List <SeatSelection> seatSelections = getSeatSelections(sc);
         List <Seat> seats = getSeats(sR);
-        analyseSeatsSelections(seatSelections, seats);
+        Vector <SeatsResponse> screeningRoomMap = createScreeningRoomMap(sc, seats, seatSelections);
+        analyseSeatsSelections(screeningRoomMap);
     }
 
     private List <SeatSelection> getSeatSelections(Screening sc){
@@ -193,29 +205,31 @@ public class BookingController {
         return seats;
     }
 
-    private void analyseSeatsSelections(List <SeatSelection> seatSelections, List <Seat> seats) throws EmptySeatBetweenTakenSeatsException{
-        for(SeatSelection seatSelection1 : seatSelections){
-            boolean correct = false;
-            for(Seat nextSeat : seats)
-                if (seatSelection1.getSeat().getLine() == nextSeat.getLine() &&
-                    seatSelection1.getSeat().getColumn() == nextSeat.getColumn() - 1)
-                        for (SeatSelection seatSelection2 : seatSelections)
-                            if (seatSelection2.getSeat() == nextSeat )
-                                correct = true;
-            
-            if(seatSelection1.getSeat().getColumn() == getMaxColumn(seats))
-                correct = true;
-            if(!correct)
-                throw new EmptySeatBetweenTakenSeatsException();
+    private Vector <SeatsResponse> createScreeningRoomMap(Screening screening, List<Seat> allSeats, List <SeatSelection> takenSeats) {
+        Vector <SeatsResponse> response = new Vector<>();
+        for(Seat seat : allSeats) {
+            SeatsResponse seatsResponse = new SeatsResponse();
+            seatsResponse.setLine(seat.getLine());
+            seatsResponse.setColumn(seat.getColumn());
+            seatsResponse.setStatus(Constants.Views.FREE_SEAT_CONST);
+            for (SeatSelection takenSeat : takenSeats)
+                if (seat.getColumn() == takenSeat.getSeat().getColumn() && seat.getLine() == takenSeat.getSeat().getLine())
+                    seatsResponse.setStatus(Constants.Views.TAKEN_SEAT_CONST);
+            response.add(seatsResponse);
         }
+        return response;
     }
 
-    private int getMaxColumn(List <Seat> seats) {
-        int maxColumn = 0;
-        for (Seat seat : seats)
-            if (seat.getColumn() > maxColumn)
-                maxColumn = seat.getColumn();
-        return maxColumn;
+    private void analyseSeatsSelections(Vector <SeatsResponse> screeningRoomMap) throws Exception{
+        for (SeatsResponse seat1 : screeningRoomMap)
+            for (SeatsResponse seat2 : screeningRoomMap)
+                for (SeatsResponse seat3 : screeningRoomMap)
+                    if (seat1.getLine() == seat2.getLine() && seat2.getLine() == seat3.getLine() &&
+                        seat1.getColumn() == seat2.getColumn() - 1 && seat2.getColumn() == seat3.getColumn() - 1 &&
+                        seat1.getStatus() == Constants.Views.TAKEN_SEAT_CONST &&
+                        seat2.getStatus() == Constants.Views.FREE_SEAT_CONST &&
+                        seat3.getStatus() == Constants.Views.TAKEN_SEAT_CONST)
+                        throw new Exception();
     }
 
     private int getTotalAmountToPay(List <SeatSelectionRequest> req) {

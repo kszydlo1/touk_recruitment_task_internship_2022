@@ -18,3 +18,6 @@ curl -X GET localhost:8080/booking/6 \
             {\"line\": 1, \"column\": 1, \"ticket\": \"student\"}
             ], \"firstName\": \"Kamil\", \"lastName\": \"Szydłowski\"}"
 echo "\n"
+
+curl -X GET localhost:8080/screening/6
+echo "\n"
